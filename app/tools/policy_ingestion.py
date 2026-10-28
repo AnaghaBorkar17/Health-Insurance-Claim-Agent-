@@ -7,7 +7,7 @@ vector embeddings using Ollama (nomic-embed-text), and persists them in ChromaDB
 import re
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 import chromadb
 from chromadb import Documents, EmbeddingFunction, Embeddings
 import requests
