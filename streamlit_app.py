@@ -500,4 +500,3 @@ else:
                 st.markdown(f"<div class='audit-step'>{step}</div>", unsafe_allow_html=True)
         else:
             st.write("No audit entries recorded.")
-
