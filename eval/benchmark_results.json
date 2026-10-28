@@ -1,0 +1,71 @@
+{
+  "timestamp": "2026-10-26T10:16:50.706083+00:00",
+  "total_cases_evaluated": 5,
+  "adjudication_accuracy_pct": 100.0,
+  "pii_compliance_pct": 100.0,
+  "policy_citation_rate_pct": 100.0,
+  "average_latency_seconds": 11.86,
+  "total_latency_seconds": 59.28,
+  "results": [
+    {
+      "claim_id": "CLM-2026-001",
+      "case_name": "Case 001: Cataract Surgery Sub-limit",
+      "expected_outcome": "Approve",
+      "actual_outcome": "Approve",
+      "is_correct": true,
+      "latency_seconds": 15.89,
+      "citations_count": 1,
+      "pii_leak_count": 0,
+      "pii_clean": true,
+      "pii_leaks": []
+    },
+    {
+      "claim_id": "CLM-2026-002",
+      "case_name": "Case 002: Meniscus Tear - Missing MRI",
+      "expected_outcome": "Query",
+      "actual_outcome": "Query",
+      "is_correct": true,
+      "latency_seconds": 5.75,
+      "citations_count": 1,
+      "pii_leak_count": 0,
+      "pii_clean": true,
+      "pii_leaks": []
+    },
+    {
+      "claim_id": "CLM-2026-003",
+      "case_name": "Case 003: Cosmetic Rhinoplasty Exclusion",
+      "expected_outcome": "Reject",
+      "actual_outcome": "Reject",
+      "is_correct": true,
+      "latency_seconds": 12.77,
+      "citations_count": 1,
+      "pii_leak_count": 0,
+      "pii_clean": true,
+      "pii_leaks": []
+    },
+    {
+      "claim_id": "CLM-2026-004",
+      "case_name": "Case 004: Duplicate Claim Submission",
+      "expected_outcome": "Query",
+      "actual_outcome": "Query",
+      "is_correct": true,
+      "latency_seconds": 13.82,
+      "citations_count": 1,
+      "pii_leak_count": 0,
+      "pii_clean": true,
+      "pii_leaks": []
+    },
+    {
+      "claim_id": "CLM-2026-005",
+      "case_name": "Case 005: Inflated Bill & 14-day Stay",
+      "expected_outcome": "Query",
+      "actual_outcome": "Query",
+      "is_correct": true,
+      "latency_seconds": 11.06,
+      "citations_count": 1,
+      "pii_leak_count": 0,
+      "pii_clean": true,
+      "pii_leaks": []
+    }
+  ]
+}

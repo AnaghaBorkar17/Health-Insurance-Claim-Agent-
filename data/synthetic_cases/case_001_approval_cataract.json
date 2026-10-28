@@ -1,0 +1,29 @@
+{
+  "claim_id": "CLM-2026-001",
+  "patient_name": "Rohan Deshmukh",
+  "patient_id": "PAT-98421",
+  "patient_age": 62,
+  "patient_gender": "Male",
+  "phone": "+91 98200 12345",
+  "aadhaar": "9823-4412-8871",
+  "address": "402 Palm Grove Apartments, Bandra West, Mumbai 400050",
+  "policy_number": "CP-POL-55410",
+  "policy_name": "CarePlus Comprehensive Health Policy",
+  "hospital_name": "Apex Specialty Eye Institute",
+  "admission_date": "2026-11-05",
+  "discharge_date": "2026-11-05",
+  "length_of_stay": 1,
+  "diagnosis_codes": ["H25.011"],
+  "diagnosis_descriptions": ["Senile nuclear cataract, right eye"],
+  "procedure_codes": ["66984"],
+  "procedure_descriptions": ["Extracapsular cataract removal with insertion of intraocular lens"],
+  "estimated_cost": 36000.0,
+  "documents_submitted": [
+    "claim_form",
+    "hospital_bill",
+    "diagnostic_report",
+    "prescription"
+  ],
+  "expected_outcome": "Approve",
+  "expected_rationale": "Valid diagnosis and procedure codes within policy sub-limit of $40,000 (Clause 2.1). All mandatory documents present."
+}

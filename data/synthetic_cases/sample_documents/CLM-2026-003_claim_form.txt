@@ -1,0 +1,23 @@
+PRE-AUTHORIZATION REQUEST FORM - HEALTH INSURANCE
+Hospital: Aura Aesthetic Plastic Surgery Center
+Address: 88 Defence Colony, New Delhi 110024
+
+PATIENT DETAILS:
+Full Name: Kavita Sharma
+Age: 28 | Gender: Female | DOB: 1998-03-22
+Mobile: +91 99880 77665
+Aadhaar ID: 7712-9901-3344
+Address: 88 Defence Colony, New Delhi 110024
+Insurance Policy No: CP-POL-44120
+
+CLINICAL & ADMISSION DETAILS:
+Date of Proposed Admission: 2026-11-15
+Expected Date of Discharge: 2026-11-16
+Chief Complaints: Patient desires aesthetic contouring of nasal bridge and dorsal hump reduction.
+Clinical Diagnosis: Aesthetic nasal deformity
+ICD-10 Diagnosis Code: Z41.1 (Encounter for cosmetic surgery)
+Proposed Procedure: Open Rhinoplasty with dorsal hump reduction and tip refinement
+CPT / Procedure Code: 30410
+Attending Surgeon: Dr. Rajiv Mehra, MCh (Plastic Surgery)
+History of Trauma: None reported. Elective aesthetic enhancement.
+Total Estimated Cost: $120,000

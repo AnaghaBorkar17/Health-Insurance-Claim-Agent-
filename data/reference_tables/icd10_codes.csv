@@ -1,0 +1,18 @@
+code,description,category,gender_restriction,min_age,max_age
+H25.011,Senile nuclear cataract right eye,Ophthalmology,None,0,120
+H25.012,Senile nuclear cataract left eye,Ophthalmology,None,0,120
+H25.9,Unspecified senile cataract,Ophthalmology,None,0,120
+M23.22,Derangement of meniscus due to old tear or injury right knee,Orthopedics,None,0,120
+M23.23,Derangement of meniscus due to old tear or injury left knee,Orthopedics,None,0,120
+Z41.1,Encounter for cosmetic surgery for aesthetic purposes,Cosmetic,None,0,120
+K35.80,Unspecified acute appendicitis,Gastroenterology,None,0,120
+K35.2,Acute appendicitis with generalized peritonitis,Gastroenterology,None,0,120
+K80.00,Calculus of gallbladder with acute cholecystitis without obstruction,Gastroenterology,None,0,120
+E11.9,Type 2 diabetes mellitus without complications,Endocrinology,None,0,120
+I10,Essential (primary) hypertension,Cardiology,None,0,120
+N80.0,Endometriosis of uterus,Gynecology,Female,10,65
+N40.0,Benign prostatic hyperplasia without lower urinary tract symptoms,Urology,Male,40,120
+J18.9,Pneumonia unspecified organism,Pulmonology,None,0,120
+S82.201A,Unspecified fracture of shaft of right tibia initial encounter for closed fracture,Orthopedics,None,0,120
+M17.11,Unilateral primary osteoarthritis right knee,Orthopedics,None,30,120
+M17.12,Unilateral primary osteoarthritis left knee,Orthopedics,None,30,120

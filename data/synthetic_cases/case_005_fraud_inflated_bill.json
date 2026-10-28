@@ -1,0 +1,30 @@
+{
+  "claim_id": "CLM-2026-005",
+  "patient_name": "Vikram Malhotra",
+  "patient_id": "PAT-61520",
+  "patient_age": 34,
+  "patient_gender": "Male",
+  "phone": "+91 98450 99887",
+  "aadhaar": "6654-1234-9087",
+  "address": "77 Jubilee Hills, Hyderabad 500033",
+  "policy_number": "CP-POL-77192",
+  "policy_name": "CarePlus Comprehensive Health Policy",
+  "hospital_name": "Grand Sunrise Multispecialty Clinic",
+  "admission_date": "2026-11-20",
+  "discharge_date": "2026-12-04",
+  "length_of_stay": 14,
+  "diagnosis_codes": ["K35.80"],
+  "diagnosis_descriptions": ["Unspecified acute appendicitis"],
+  "procedure_codes": ["44970"],
+  "procedure_descriptions": ["Laparoscopy, surgical, appendectomy"],
+  "estimated_cost": 275000.0,
+  "documents_submitted": [
+    "claim_form",
+    "hospital_bill",
+    "prescription",
+    "diagnostic_report"
+  ],
+  "expected_outcome": "Query",
+  "expected_fraud_flag": "billing_spike_and_excessive_stay",
+  "expected_rationale": "High risk flags: Estimated cost of $275,000 exceeds regional benchmark median ($45,000) by over 500%, and length of stay (14 days) is statistically abnormal for an uncomplicated laparoscopic appendectomy (expected 2-3 days)."
+}

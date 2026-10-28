@@ -1,0 +1,9 @@
+code,description,category,benchmark_min_cost,benchmark_median_cost,benchmark_max_cost,expected_stay_days,compatible_icd10
+66984,Extracapsular cataract removal with insertion of intraocular lens,Ophthalmology,28000.0,35000.0,45000.0,1,"H25,H26"
+66982,Extracapsular cataract extraction with intraocular lens complex,Ophthalmology,35000.0,42000.0,55000.0,1,"H25,H26"
+29881,Arthroscopy knee surgical with meniscectomy medial or lateral,Orthopedics,55000.0,70000.0,90000.0,2,"M23"
+30410,Rhinoplasty primary complete external parts including bony pyramid lateral and alar cartilages,Plastic Surgery,90000.0,120000.0,160000.0,1,"Z41.1,M95.0"
+44970,Laparoscopy surgical appendectomy,General Surgery,35000.0,45000.0,65000.0,2,"K35"
+47562,Laparoscopy surgical cholecystectomy,General Surgery,50000.0,65000.0,85000.0,2,"K80"
+27447,Arthroplasty knee condyle and plateau total knee arthroplasty,Orthopedics,180000.0,220000.0,280000.0,5,"M17"
+99213,Office or other outpatient visit for evaluation and management,Evaluation,1000.0,1500.0,2500.0,0,"*"

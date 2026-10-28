@@ -1,0 +1,30 @@
+{
+  "claim_id": "CLM-2026-002",
+  "patient_name": "Meera Venkataraman",
+  "patient_id": "PAT-33109",
+  "patient_age": 45,
+  "patient_gender": "Female",
+  "phone": "+91 97110 54321",
+  "aadhaar": "4432-8871-1209",
+  "address": "12 Lotus Colony, Jayanagar, Bengaluru 560041",
+  "policy_number": "CP-POL-88210",
+  "policy_name": "CarePlus Comprehensive Health Policy",
+  "hospital_name": "Metro Health Super Specialty Hospital",
+  "admission_date": "2026-11-10",
+  "discharge_date": "2026-11-12",
+  "length_of_stay": 2,
+  "diagnosis_codes": ["M23.22"],
+  "diagnosis_descriptions": ["Derangement of meniscus due to old tear or injury, right knee"],
+  "procedure_codes": ["29881"],
+  "procedure_descriptions": ["Arthroscopy, knee, surgical; with meniscectomy (medial or lateral)"],
+  "estimated_cost": 75000.0,
+  "documents_submitted": [
+    "claim_form",
+    "hospital_bill"
+  ],
+  "missing_documents": [
+    "diagnostic_report"
+  ],
+  "expected_outcome": "Query",
+  "expected_rationale": "Missing mandatory diagnostic MRI radiology report required under Clause 5.1 to establish medical necessity."
+}

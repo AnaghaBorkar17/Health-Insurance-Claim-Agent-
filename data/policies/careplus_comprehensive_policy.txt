@@ -1,0 +1,62 @@
+CAREPLUS COMPREHENSIVE HEALTH INSURANCE POLICY
+POLICY DOCUMENT & CLAUSE DIRECTORY
+Policy Version: CP-2026-V1.0
+Fictional Demonstration Policy - For AI Evaluation Only
+
+================================================================================
+SECTION 1: INPATIENT HOSPITALIZATION & ACCOMMODATION
+================================================================================
+
+Clause 1.1 - Room Rent and Boarding Expenses
+In the event of inpatient admission exceeding 24 hours, room rent, boarding, and nursing charges shall be covered up to a maximum daily sub-limit of 1% of the total Sum Insured. Intensive Care Unit (ICU) charges are capped at 2% of Sum Insured per day. Pro-rata proportionate deductions will apply to all associated hospital charges if an insured patient chooses a room category exceeding this entitlement.
+
+Clause 1.2 - Daycare Treatment Procedures
+Medically necessary treatments and minor surgical procedures undertaken under general or local anesthesia in a hospital or registered daycare center that require less than 24 hours hospitalization due to technological advancement are covered, subject to pre-authorization.
+
+================================================================================
+SECTION 2: SPECIFIC PROCEDURES & DISEASE-SPECIFIC SUB-LIMITS
+================================================================================
+
+Clause 2.1 - Cataract Treatment Sub-Limit
+Coverage for cataract surgery (phacoemulsification with intraocular lens implantation) is subject to an express sub-limit of $40,000 (or INR 40,000) per eye. Any surgical expenditure, consumable cost, or premium multifocal lens charge exceeding this sub-limit must be borne directly by the insured patient as an out-of-pocket copay.
+
+Clause 2.2 - Joint Replacement and Orthopedic Implants
+Total knee replacement (TKR) or total hip replacement (THR) for degenerative arthritis is payable up to $250,000 per joint, subject to a continuous waiting period of 24 months from the initial policy commencement date.
+
+Clause 2.3 - Emergency Appendectomy and Hernia Repair
+Acute emergency surgical treatment for appendicitis (ICD-10 K35.80, CPT 44970) or incarcerated hernia is covered in full without waiting period restrictions, provided the procedure is certified as emergent by the attending surgeon.
+
+================================================================================
+SECTION 3: WAITING PERIODS & PRE-EXISTING CONDITIONS
+================================================================================
+
+Clause 3.1 - Initial 30-Day Waiting Period
+No claim shall be payable during the initial 30 days from policy commencement date, except for hospitalization necessitated directly by an acute accidental injury occurring after policy issuance.
+
+Clause 3.2 - Pre-Existing Diseases (PED) Waiting Period
+Any medical condition, ailment, or injury that was diagnosed, treated, or for which medical advice was sought within 36 months prior to the initial policy issuance shall be considered a Pre-Existing Disease. PED-related claims will be covered only after 24 months of continuous, uninterrupted policy renewal.
+
+================================================================================
+SECTION 4: PERMANENT EXCLUSIONS
+================================================================================
+
+Clause 4.1 - Cosmetic and Aesthetic Procedures
+Any surgery, treatment, or intervention performed solely for aesthetic, cosmetic, or plastic appearance enhancement—including but not limited to rhinoplasty (nose reshaping), cosmetic blepharoplasty, liposuction, breast augmentation/reduction, and hair transplant—is strictly excluded from policy coverage. Exception: Reconstructive surgery required solely to restore functional impairment directly caused by accidental trauma or burn injury is admissible.
+
+Clause 4.2 - Experimental and Unproven Treatments
+Expenses related to unproven, experimental, or unscientific therapies, holistic treatments without published clinical trial efficacy, or medical devices not approved by national medical regulatory authorities are entirely excluded.
+
+Clause 4.3 - Non-Medical Items and Personal Comfort Amenities
+Personal comfort expenses, telephone charges, visitor meals, luxury suite surcharges, and non-prescribed cosmetic toiletries are non-payable items.
+
+================================================================================
+SECTION 5: MANDATORY CLAIM SUBMISSION REQUIREMENTS
+================================================================================
+
+Clause 5.1 - Pre-Authorization Documentation Checklist
+Every pre-authorization claim request submitted by the treating hospital or the insured must include all of the following mandatory documents:
+1. Completed Pre-Authorization Claim Form duly signed and stamped by the attending physician and hospital authority.
+2. Itemized Cost Estimate and Pro-forma Billing Breakdown detailing room, surgeon fees, medicines, and consumables.
+3. Relevant Diagnostic / Pathology / Radiology Investigation Reports supporting the primary diagnosis.
+4. Physician Admission Clinical Notes / Past Medical History indicating whether the condition is acute or pre-existing.
+Failure to submit any of these mandatory records shall prompt a formal Request for Information (Query), pausing claim adjudication until complete records are received.

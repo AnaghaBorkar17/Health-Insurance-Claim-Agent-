@@ -1,0 +1,29 @@
+{
+  "claim_id": "CLM-2026-003",
+  "patient_name": "Kavita Sharma",
+  "patient_id": "PAT-77291",
+  "patient_age": 28,
+  "patient_gender": "Female",
+  "phone": "+91 99880 77665",
+  "aadhaar": "7712-9901-3344",
+  "address": "88 Defence Colony, New Delhi 110024",
+  "policy_number": "CP-POL-44120",
+  "policy_name": "CarePlus Comprehensive Health Policy",
+  "hospital_name": "Aura Aesthetic Plastic Surgery Center",
+  "admission_date": "2026-11-15",
+  "discharge_date": "2026-11-16",
+  "length_of_stay": 1,
+  "diagnosis_codes": ["Z41.1"],
+  "diagnosis_descriptions": ["Encounter for cosmetic surgery for aesthetic purposes"],
+  "procedure_codes": ["30410"],
+  "procedure_descriptions": ["Rhinoplasty, primary; complete, external parts including bony pyramid, lateral and alar cartilages"],
+  "estimated_cost": 120000.0,
+  "documents_submitted": [
+    "claim_form",
+    "hospital_bill",
+    "prescription",
+    "diagnostic_report"
+  ],
+  "expected_outcome": "Reject",
+  "expected_rationale": "Cosmetic surgery for aesthetic enhancement is permanently excluded under Clause 4.1."
+}
