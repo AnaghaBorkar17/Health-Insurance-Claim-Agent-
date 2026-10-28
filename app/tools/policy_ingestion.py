@@ -12,6 +12,9 @@ import chromadb
 from chromadb import Documents, EmbeddingFunction, Embeddings
 import requests
 
+import hashlib
+import math
+import time
 from app.config import settings
 
 logger = logging.getLogger(__name__)
@@ -20,27 +23,82 @@ logger = logging.getLogger(__name__)
 POLICIES_DIR = Path(settings.chroma_persist_dir).parent / "policies"
 COLLECTION_NAME = "careplus_policy_clauses"
 
+_OLLAMA_STATUS_CACHE: Dict[str, Tuple[bool, float]] = {}
+
+
+def is_ollama_available(base_url: Optional[str] = None) -> bool:
+    """Check whether local Ollama server is running and reachable."""
+    url = (base_url or settings.ollama_base_url).rstrip("/")
+    now = time.time()
+    if url in _OLLAMA_STATUS_CACHE:
+        status, ts = _OLLAMA_STATUS_CACHE[url]
+        if now - ts < 30.0:
+            return status
+
+    try:
+        resp = requests.get(f"{url}/api/tags", timeout=0.8)
+        is_up = resp.status_code == 200
+    except Exception:
+        is_up = False
+
+    _OLLAMA_STATUS_CACHE[url] = (is_up, now)
+    return is_up
+
+
+class FastSemanticEmbeddingFunction(EmbeddingFunction):
+    """Deterministic, zero-dependency local embedding function.
+
+    Generates dense feature vectors using token and character n-gram hashing
+    with L2 normalization. Runs completely offline with no network or background daemon.
+    """
+
+    def __init__(self, dim: int = 128):
+        self.dim = dim
+
+    def __call__(self, input: Documents) -> Embeddings:
+        vectors = []
+        for doc in input:
+            vec = [0.0] * self.dim
+            text = doc.lower()
+            words = re.findall(r"\b\w+\b", text)
+            for w in words:
+                h = int(hashlib.md5(w.encode("utf-8")).hexdigest(), 16) % self.dim
+                vec[h] += 1.0
+            for i in range(max(0, len(text) - 2)):
+                tri = text[i:i + 3]
+                h = int(hashlib.md5(tri.encode("utf-8")).hexdigest(), 16) % self.dim
+                vec[h] += 0.25
+            norm = math.sqrt(sum(v * v for v in vec))
+            if norm > 0:
+                vec = [v / norm for v in vec]
+            vectors.append(vec)
+        return vectors
+
 
 class OllamaEmbeddingFunction(EmbeddingFunction):
-    """Custom ChromaDB Embedding Function that calls local Ollama runtime."""
+    """ChromaDB Embedding Function that uses Ollama when available and falls back to local embeddings."""
 
     def __init__(self, base_url: str = None, model: str = None):
         self.base_url = (base_url or settings.ollama_base_url).rstrip("/")
         self.model = model or settings.ollama_embed_model
+        self._fallback = FastSemanticEmbeddingFunction()
 
     def __call__(self, input: Documents) -> Embeddings:
+        if not is_ollama_available(self.base_url):
+            return self._fallback(input)
+
         try:
             response = requests.post(
                 f"{self.base_url}/api/embed",
                 json={"model": self.model, "input": input},
-                timeout=60,
+                timeout=5,
             )
             response.raise_for_status()
             data = response.json()
             return data["embeddings"]
         except Exception as e:
-            logger.error(f"Ollama embedding failure ({self.model}): {e}")
-            raise
+            logger.warning(f"Ollama embedding unavailable ({e}); falling back to local semantic embeddings.")
+            return self._fallback(input)
 
 
 def parse_policy_into_clauses(text: str, source_name: str) -> List[Dict]:
@@ -118,43 +176,8 @@ def get_chroma_client() -> chromadb.PersistentClient:
     return chromadb.PersistentClient(path=str(persist_dir))
 
 
-def get_policy_collection() -> chromadb.Collection:
-    """Retrieve or create the policy clauses collection with Ollama embeddings."""
-    client = get_chroma_client()
-    embedding_fn = OllamaEmbeddingFunction(
-        base_url=settings.ollama_base_url,
-        model=settings.ollama_embed_model,
-    )
-    return client.get_or_create_collection(
-        name=COLLECTION_NAME,
-        embedding_function=embedding_fn,
-        metadata={"hnsw:space": "cosine"},
-    )
-
-
-def ingest_policy_documents(force_reload: bool = False) -> int:
-    """Ingest all policy text files into ChromaDB.
-
-    Args:
-        force_reload: If True, clears existing collection before re-indexing.
-
-    Returns:
-        Total number of clauses indexed.
-    """
-    collection = get_policy_collection()
-
-    if not force_reload and collection.count() > 0:
-        logger.info(f"Policy collection already indexed with {collection.count()} clauses.")
-        return collection.count()
-
-    if force_reload:
-        client = get_chroma_client()
-        try:
-            client.delete_collection(COLLECTION_NAME)
-        except Exception:
-            pass
-        collection = get_policy_collection()
-
+def _populate_collection(collection: chromadb.Collection) -> int:
+    """Read policies from disk and index them into the given Chroma collection."""
     policies_dir = POLICIES_DIR
     if not policies_dir.exists():
         policies_dir.mkdir(parents=True, exist_ok=True)
@@ -166,9 +189,12 @@ def ingest_policy_documents(force_reload: bool = False) -> int:
 
     all_clauses = []
     for p_file in policy_files:
-        text = p_file.read_text(encoding="utf-8")
-        parsed = parse_policy_into_clauses(text, p_file.name)
-        all_clauses.extend(parsed)
+        try:
+            text = p_file.read_text(encoding="utf-8")
+            parsed = parse_policy_into_clauses(text, p_file.name)
+            all_clauses.extend(parsed)
+        except Exception as e:
+            logger.error(f"Error reading policy file {p_file}: {e}")
 
     if not all_clauses:
         return 0
@@ -186,11 +212,73 @@ def ingest_policy_documents(force_reload: bool = False) -> int:
         for c in all_clauses
     ]
 
-    collection.add(
-        documents=documents,
-        ids=ids,
-        metadatas=metadatas,
+    try:
+        collection.add(
+            documents=documents,
+            ids=ids,
+            metadatas=metadatas,
+        )
+        logger.info(f"Successfully indexed {len(all_clauses)} policy clauses into ChromaDB.")
+        return len(all_clauses)
+    except Exception as e:
+        logger.error(f"Failed to add documents to collection: {e}")
+        return 0
+
+
+def get_policy_collection() -> chromadb.Collection:
+    """Retrieve or create the policy clauses collection with resilient embeddings."""
+    client = get_chroma_client()
+    ollama_up = is_ollama_available(settings.ollama_base_url)
+
+    # Use distinct collection names for Ollama vs local embeddings to prevent dimension collisions
+    collection_name = "careplus_policy_clauses_ollama" if ollama_up else "careplus_policy_clauses_local"
+    embedding_fn = (
+        OllamaEmbeddingFunction(
+            base_url=settings.ollama_base_url,
+            model=settings.ollama_embed_model,
+        )
+        if ollama_up
+        else FastSemanticEmbeddingFunction()
     )
 
-    logger.info(f"Successfully indexed {len(all_clauses)} policy clauses into ChromaDB.")
-    return len(all_clauses)
+    try:
+        col = client.get_or_create_collection(
+            name=collection_name,
+            embedding_function=embedding_fn,
+            metadata={"hnsw:space": "cosine"},
+        )
+        if col.count() == 0:
+            _populate_collection(col)
+        return col
+    except Exception as e:
+        logger.warning(f"Collection {collection_name} dimension conflict ({e}). Recreating collection...")
+        try:
+            client.delete_collection(collection_name)
+        except Exception:
+            pass
+        col = client.get_or_create_collection(
+            name=collection_name,
+            embedding_function=embedding_fn,
+            metadata={"hnsw:space": "cosine"},
+        )
+        _populate_collection(col)
+        return col
+
+
+def ingest_policy_documents(force_reload: bool = False) -> int:
+    """Ingest all policy text files into ChromaDB.
+
+    Args:
+        force_reload: If True, clears existing collection before re-indexing.
+
+    Returns:
+        Total number of clauses indexed.
+    """
+    collection = get_policy_collection()
+
+    if not force_reload and collection.count() > 0:
+        logger.info(f"Policy collection already indexed with {collection.count()} clauses.")
+        return collection.count()
+
+    return _populate_collection(collection)
+

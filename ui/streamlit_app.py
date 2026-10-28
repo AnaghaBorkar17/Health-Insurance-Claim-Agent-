@@ -37,6 +37,7 @@ from app.state import (
     HumanReviewAction,
 )
 from app.tools.database import load_reference_tables
+from app.tools.policy_ingestion import is_ollama_available
 
 # Set page configuration
 st.set_page_config(
@@ -158,13 +159,33 @@ selected_case_file = case_options[selected_case_label]
 
 st.sidebar.markdown("---")
 st.sidebar.subheader("System Infrastructure")
-st.sidebar.success("Local LLM: Ollama qwen2.5:3b")
-st.sidebar.success("Vector DB: ChromaDB (nomic-embed-text)")
+
+ollama_up = is_ollama_available()
+if ollama_up:
+    st.sidebar.success(f"Local LLM: Ollama ({settings.ollama_llm_model})")
+    st.sidebar.success(f"Vector DB: ChromaDB ({settings.ollama_embed_model})")
+else:
+    st.sidebar.info("Local LLM: Rule Engine (Cloud Ready)")
+    st.sidebar.success("Vector DB: ChromaDB (Local Semantic Engine)")
+
 st.sidebar.success("Checkpointer: SQLite checkpoints.db")
+
 if settings.is_gemini_configured:
     st.sidebar.info(f"Cloud LLM: Gemini ({settings.gemini_model})")
 else:
-    st.sidebar.warning("Cloud LLM: Offline fallback active")
+    st.sidebar.info("Cloud LLM: Offline rule engine active")
+
+with st.sidebar.expander("🔑 Cloud AI API Key (Optional)"):
+    st.caption("Provide a Gemini API Key for cloud reasoning, or leave blank to run completely offline.")
+    custom_gemini_key = st.text_input(
+        "Gemini API Key:",
+        type="password",
+        value=settings.gemini_api_key or "",
+        key="gemini_key_input",
+    )
+    if custom_gemini_key and custom_gemini_key != settings.gemini_api_key:
+        settings.gemini_api_key = custom_gemini_key
+        st.rerun()
 
 run_pipeline_btn = st.sidebar.button("🚀 Process Claim Pre-Authorization", type="primary", use_container_width=True)
 
@@ -188,35 +209,39 @@ if "is_paused" not in st.session_state:
 graph = get_compiled_graph()
 
 if run_pipeline_btn:
-    case_data = load_synthetic_case(selected_case_file)
-    claim_id = case_data.get("claim_id", "CLM-TEST")
-    thread_id = f"THREAD-{claim_id}-{int(datetime.now().timestamp())}"
+    try:
+        case_data = load_synthetic_case(selected_case_file)
+        claim_id = case_data.get("claim_id", "CLM-TEST")
+        thread_id = f"THREAD-{claim_id}-{int(datetime.now().timestamp())}"
 
-    docs = prepare_documents_for_case(case_data)
+        docs = prepare_documents_for_case(case_data)
 
-    initial_state: ClaimState = {
-        "claim_id": claim_id,
-        "created_at": datetime.now(timezone.utc).isoformat(),
-        "uploaded_documents": docs,
-        "missing_mandatory_documents": [],
-        "pii_redacted": False,
-        "retrieved_clauses": [],
-        "audit_trail": [f"[UI] Initiated claim processing for {claim_id} ({selected_case_label})."],
-        "errors": [],
-    }
+        initial_state: ClaimState = {
+            "claim_id": claim_id,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "uploaded_documents": docs,
+            "missing_mandatory_documents": [],
+            "pii_redacted": False,
+            "retrieved_clauses": [],
+            "audit_trail": [f"[UI] Initiated claim processing for {claim_id} ({selected_case_label})."],
+            "errors": [],
+        }
 
-    config = {"configurable": {"thread_id": thread_id}}
+        config = {"configurable": {"thread_id": thread_id}}
 
-    with st.spinner("Executing Multi-Agent Workflow (Extraction -> Redaction -> Parallel RAG/Codes/Fraud -> Decision)..."):
-        # Graph runs and pauses at human_review
-        graph.invoke(initial_state, config=config)
-        snapshot = graph.get_state(config)
+        with st.spinner("Executing Multi-Agent Workflow (Extraction -> Redaction -> Parallel RAG/Codes/Fraud -> Decision)..."):
+            # Graph runs and pauses at human_review
+            graph.invoke(initial_state, config=config)
+            snapshot = graph.get_state(config)
 
-        st.session_state.current_thread_id = thread_id
-        st.session_state.claim_state = snapshot.values
-        st.session_state.is_paused = "human_review" in snapshot.next
+            st.session_state.current_thread_id = thread_id
+            st.session_state.claim_state = snapshot.values
+            st.session_state.is_paused = "human_review" in snapshot.next
 
-    st.success(f"Claim {claim_id} processed! Awaiting Adjudicator Review.")
+        st.success(f"Claim {claim_id} processed! Awaiting Adjudicator Review.")
+    except Exception as err:
+        logger.exception("Error executing claim pre-authorization pipeline")
+        st.error(f"Error processing claim: {err}")
 
 
 # ==============================================================================

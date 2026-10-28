@@ -5,8 +5,20 @@ using Pydantic Settings. Provides centralized access to model names,
 database paths, and service URLs.
 """
 
+import os
 from pathlib import Path
 from typing import Optional
+
+# Automatically bridge Streamlit Community Cloud secrets into os.environ if running inside Streamlit
+try:
+    import streamlit as st
+    if hasattr(st, "secrets"):
+        for _sec_key in ["GEMINI_API_KEY", "GOOGLE_API_KEY", "GEMINI_MODEL", "OLLAMA_BASE_URL", "OLLAMA_LLM_MODEL", "OLLAMA_EMBED_MODEL"]:
+            if _sec_key in st.secrets and not os.environ.get(_sec_key):
+                os.environ[_sec_key] = str(st.secrets[_sec_key])
+except Exception:
+    pass
+
 from pydantic import Field, AliasChoices
 from pydantic_settings import BaseSettings, SettingsConfigDict
 

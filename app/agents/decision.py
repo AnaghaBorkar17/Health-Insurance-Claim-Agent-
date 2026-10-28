@@ -239,24 +239,26 @@ Guidelines:
                 logger.info("Gemini high-demand spike detected; activated 60s circuit breaker fallback.")
             logger.debug("Gemini summary polishing call failed (%s); falling back.", e)
 
-    # 2. Try Local Ollama instance
+    # 2. Try Local Ollama instance (only if reachable)
     try:
-        import urllib.request
-        payload = json.dumps({
-            "model": settings.ollama_llm_model,
-            "prompt": prompt,
-            "stream": False,
-        }).encode("utf-8")
-        req = urllib.request.Request(
-            f"{settings.ollama_base_url}/api/generate",
-            data=payload,
-            headers={"Content-Type": "application/json"},
-        )
-        with urllib.request.urlopen(req, timeout=8) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-            candidate = data.get("response", "").strip()
-            if candidate and len(candidate) > 20:
-                return candidate
+        from app.tools.policy_ingestion import is_ollama_available
+        if is_ollama_available(settings.ollama_base_url):
+            import urllib.request
+            payload = json.dumps({
+                "model": settings.ollama_llm_model,
+                "prompt": prompt,
+                "stream": False,
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                f"{settings.ollama_base_url}/api/generate",
+                data=payload,
+                headers={"Content-Type": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                candidate = data.get("response", "").strip()
+                if candidate and len(candidate) > 20:
+                    return candidate
     except Exception:
         pass
 
