@@ -8,7 +8,6 @@ citations with exact clause identifiers and text.
 import logging
 from typing import Dict, List, Optional
 from app.state import ClaimState, ExtractedClaim, PolicyClause
-from app.tools.policy_ingestion import get_policy_collection, ingest_policy_documents
 
 logger = logging.getLogger(__name__)
 
@@ -112,6 +111,7 @@ def retrieve_relevant_clauses(claim: ExtractedClaim, top_k: int = 3) -> List[Pol
     retrieved_map: Dict[str, PolicyClause] = {}
 
     try:
+        from app.tools.policy_ingestion import get_policy_collection, ingest_policy_documents
         collection = get_policy_collection()
 
         # If collection is empty, trigger automated ingestion

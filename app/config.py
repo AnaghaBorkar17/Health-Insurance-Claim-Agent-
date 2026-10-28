@@ -106,3 +106,28 @@ class Settings(BaseSettings):
 
 # Singleton instance for access throughout the application
 settings = Settings()
+
+_OLLAMA_STATUS_CACHE: dict = {}
+
+
+def is_ollama_available(base_url: Optional[str] = None) -> bool:
+    """Quickly check whether local Ollama server is running and reachable."""
+    import time
+    import requests
+
+    url = (base_url or settings.ollama_base_url).rstrip("/")
+    now = time.time()
+    if url in _OLLAMA_STATUS_CACHE:
+        status, ts = _OLLAMA_STATUS_CACHE[url]
+        if now - ts < 30.0:
+            return status
+
+    try:
+        resp = requests.get(f"{url}/api/tags", timeout=0.8)
+        is_up = resp.status_code == 200
+    except Exception:
+        is_up = False
+
+    _OLLAMA_STATUS_CACHE[url] = (is_up, now)
+    return is_up
+

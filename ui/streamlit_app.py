@@ -4,6 +4,14 @@ Multi-Agent Health Insurance Claim Pre-Authorization & Denial Prevention System
 Powered by LangGraph, Ollama, ChromaDB, and Google Gemini.
 """
 
+# Modern SQLite support for ChromaDB on Streamlit Cloud Linux
+try:
+    __import__("pysqlite3")
+    import sys
+    sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
+except Exception:
+    pass
+
 import json
 import logging
 import sys
@@ -11,8 +19,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-# Ensure project root is in sys.path when running from ui/ subdirectory
-_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+# Ensure project root is in sys.path
+_FILE_DIR = Path(__file__).resolve().parent
+if (_FILE_DIR / "app").exists():
+    _PROJECT_ROOT = _FILE_DIR
+else:
+    _PROJECT_ROOT = _FILE_DIR.parent
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
 
@@ -24,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 # Import project components
 from app.agents.human_review import resume_human_review
-from app.config import PROJECT_ROOT, settings
+from app.config import PROJECT_ROOT, is_ollama_available, settings
 from app.graph import create_claim_graph
 from app.state import (
     AdjudicationOutcome,
@@ -37,7 +49,6 @@ from app.state import (
     HumanReviewAction,
 )
 from app.tools.database import load_reference_tables
-from app.tools.policy_ingestion import is_ollama_available
 
 # Set page configuration
 st.set_page_config(
@@ -489,3 +500,4 @@ else:
                 st.markdown(f"<div class='audit-step'>{step}</div>", unsafe_allow_html=True)
         else:
             st.write("No audit entries recorded.")
+

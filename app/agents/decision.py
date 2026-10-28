@@ -241,7 +241,7 @@ Guidelines:
 
     # 2. Try Local Ollama instance (only if reachable)
     try:
-        from app.tools.policy_ingestion import is_ollama_available
+        from app.config import is_ollama_available
         if is_ollama_available(settings.ollama_base_url):
             import urllib.request
             payload = json.dumps({
